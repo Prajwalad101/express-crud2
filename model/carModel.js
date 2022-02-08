@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-// TODO: Create a schema for the model
-
 const carSchema = new mongoose.Schema({
   Name: {
     type: String,
