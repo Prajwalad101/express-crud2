@@ -1,16 +1,40 @@
 const Car = require('../model/carModel');
 
 const getAllCars = async (req, res) => {
-  const queryObj = { ...req.query };
-
-  const excludeFilters = ['sort', 'find', 'limit', 'page'];
-  excludeFilters.forEach((el) => delete queryObj[el]);
-
-  let queryStr = JSON.stringify(queryObj);
-  queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
-
   try {
-    const cars = await Car.find(JSON.parse(queryStr));
+    const queryObj = { ...req.query };
+
+    const excludeFilters = ['sort', 'fields', 'limit', 'page'];
+    excludeFilters.forEach((el) => delete queryObj[el]);
+
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
+
+    // Creating a queryObject
+    let query = Car.find(JSON.parse(queryStr));
+
+    // SORT
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    }
+
+    // Limit Fields
+    if (req.query.fields) {
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    } else {
+      query = query.select('-__v');
+    }
+
+    // Add Pagination
+    const page = Number(req.query.page * 1) || 1;
+    const limit = Number(req.query.limit) || 30;
+    const skip = (page - 1) * limit;
+
+    query = query.skip(skip).limit(limit);
+
+    const cars = await query;
 
     res.status(200).json({
       status: 'success',
