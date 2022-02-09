@@ -1,5 +1,17 @@
 const Car = require('../model/carModel');
 
+const getMostPowerFul = (req, res, next) => {
+  req.query.sort = '-Horsepower,-Cylinders,-Displacement';
+  req.query.limit = '5';
+  next();
+};
+
+const getFastest = (req, res, next) => {
+  req.query.sort = 'Acceleration';
+  req.query.limit = '5';
+  next();
+};
+
 const getAllCars = async (req, res) => {
   try {
     const queryObj = { ...req.query };
@@ -124,4 +136,12 @@ const deleteCar = async (req, res) => {
   }
 };
 
-module.exports = { getAllCars, createCar, getCar, updateCar, deleteCar };
+module.exports = {
+  getMostPowerFul,
+  getFastest,
+  getAllCars,
+  createCar,
+  getCar,
+  updateCar,
+  deleteCar,
+};
