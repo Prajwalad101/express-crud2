@@ -1,9 +1,16 @@
-// TODO: Get the Car model
 const Car = require('../model/carModel');
 
 const getAllCars = async (req, res) => {
+  const queryObj = { ...req.query };
+
+  const excludeFilters = ['sort', 'find', 'limit', 'page'];
+  excludeFilters.forEach((el) => delete queryObj[el]);
+
+  let queryStr = JSON.stringify(queryObj);
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte)\b/g, (match) => `$${match}`);
+
   try {
-    const cars = await Car.find();
+    const cars = await Car.find(JSON.parse(queryStr));
 
     res.status(200).json({
       status: 'success',
@@ -13,6 +20,7 @@ const getAllCars = async (req, res) => {
       },
     });
   } catch (err) {
+    console.log(err);
     res.status(404).json({
       status: 'fail',
       message: err,
