@@ -1,6 +1,6 @@
 const globalErrorHandler = (err, req, res, next) => {
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || fail;
+  err.status = err.status || 'fail';
 
   // send a response back to the user
   res.status(err.statusCode).json({

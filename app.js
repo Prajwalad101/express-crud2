@@ -18,7 +18,6 @@ app.all('*', (req, res, next) => {
   next(err);
 });
 
-// TODO: 4. Add 404 (Not found) errors
 // TODO: 5. Seperate development vs production errors
 // TODO: 6. Handle errors in database (validation, fields, id's)
 // TODO: 7. Handle unhandled rejections
