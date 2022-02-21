@@ -2,6 +2,8 @@ const express = require('express');
 
 const app = express();
 
+const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controller/errorController');
 const carRouter = require('./routes/carRoutes');
 
 // Middlewares
@@ -11,24 +13,9 @@ app.use('/api/v1/cars', carRouter);
 // TODO: IMPLEMENT ERROR HANDLING
 
 app.all('*', (req, res, next) => {
-  // send an error response back to the client
-  // create a new error from Error constructor
-  const err = new Error(`Can't find ${req.originalUrl} on this server`);
-  err.statusCode = 404;
-  err.status = 'fail';
+  const err = new AppError(`Can't find ${req.originalUrl} on this server`, 404);
 
   next(err);
-});
-
-app.use((err, req, res, next) => {
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || fail;
-
-  // send a response back to the user
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
 });
 
 // TODO: 4. Add 404 (Not found) errors
@@ -36,5 +23,7 @@ app.use((err, req, res, next) => {
 // TODO: 6. Handle errors in database (validation, fields, id's)
 // TODO: 7. Handle unhandled rejections
 // TODO: 8. Handle uncaught exceptions
+
+app.use(globalErrorHandler);
 
 module.exports = app;
