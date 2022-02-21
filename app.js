@@ -10,15 +10,11 @@ const carRouter = require('./routes/carRoutes');
 app.use(express.json()); // Parses the req body
 app.use('/api/v1/cars', carRouter);
 
-// TODO: IMPLEMENT ERROR HANDLING
-
 app.all('*', (req, res, next) => {
   const err = new AppError(`Can't find ${req.originalUrl} on this server`, 404);
 
   next(err);
 });
-
-// TODO: 8. Handle uncaught exceptions
 
 app.use(globalErrorHandler);
 
