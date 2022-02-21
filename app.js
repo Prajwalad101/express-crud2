@@ -18,8 +18,6 @@ app.all('*', (req, res, next) => {
   next(err);
 });
 
-// TODO: 6. Handle errors in database (validation, fields, id's)
-// TODO: 7. Handle unhandled rejections
 // TODO: 8. Handle uncaught exceptions
 
 app.use(globalErrorHandler);
